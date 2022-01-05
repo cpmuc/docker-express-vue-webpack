@@ -5,17 +5,17 @@ COPY package*.json ./
 
 RUN ls
 
-RUN npm install
+RUN yarn
 
-RUN npm install -g @vue/cli
+RUN yarn @vue/cli global
 
-RUN npm rebuild node-sass
+# RUN npm rebuild node-sass
 
 COPY . .
 
 # build stage
 FROM develop-stage as build-stage
-CMD ["npm", "run", "build"]
+CMD ["yarn", "run", "build"]
 
 # production stage
 # TODO

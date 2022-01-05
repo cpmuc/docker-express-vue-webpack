@@ -1,24 +1,26 @@
 version: "3.7"
 services:
-  srv:
-    build: ./srv
-    expose:
-      - ${APP_SERVER_PORT}
-    environment:
-      API_HOST: ${API_HOST}
-      APP_SERVER_PORT: ${APP_SERVER_PORT}
-      DB_URL: postgres://user:password@db:5432/app
-    depends_on:
-      - db
+  graphql-engine:
+    image: hasura/graphql-engine:v2.1.1
     ports:
-      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
-    volumes:
-      - ./srv:/usr/src/srv/
-    command: "npm run watch"
+      - "8080:8080"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
+      PG_DATABASE_URL: postgres://postgres:postgrespassword@postgres:5432/postgres
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to set an admin secret
+      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
   web:
-    build:
-      context: ./web
-      target: "develop-stage"
+    build: web
     environment:
       - HOST=0.0.0.0
       - PORT=${VUE_APP_PORT}
@@ -29,16 +31,13 @@ services:
       - ${HOST_APP_PORT}:${VUE_APP_PORT}
     volumes:
       - ./web:/usr/src/web:cached
-    command: "npm run serve"
-  db:
-    image: "postgres"
-    container_name: "app_db"
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_DATABASE}
-    ports:
-      - "5432:5432"
+    command: "yarn serve"
+  postgres:
+    image: postgres:12
+    restart: always
     volumes:
-      - ./postgres-data:/var/lib/postgresql
-      - ./postgres-init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+volumes:
+  db_data:

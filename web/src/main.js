@@ -1,12 +1,17 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
+import {createApolloProvider} from "@vue/apollo-option";
+import {ApolloClient, InMemoryCache} from "@apollo/client/core";
 
-Vue.config.productionTip = false
+const cache = new InMemoryCache()
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+const apolloClient = new ApolloClient({
+  cache,
+  uri: 'http://localhost:8080/v1/graphql'
+})
+
+const apolloProvider = createApolloProvider({
+  defaultClient: apolloClient
+})
+
+createApp(App).use(apolloProvider).mount('#app')
