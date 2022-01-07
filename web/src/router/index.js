@@ -19,6 +19,16 @@ const routes = [
     path: '/posts/:id',
     name: 'userPostById',
     component: () => import(/* webpackChunkName: "userPostById" */ '../views/posts/_id.vue')
+  },
+  {
+    path: '/tribes/:tribeId/',
+    name: 'tribeById',
+    component: () => import(/* webpackChunkName: "tribeById" */ '../views/tribes/_tribeId/Index')
+  },
+  {
+    path: '/tribes/:tribeId/posts/:postId',
+    name: 'postInTribe',
+    component: () => import(/* webpackChunkName: "postInTribe" */ '../views/tribes/_tribeId/posts/_postId')
   }
 ]
 

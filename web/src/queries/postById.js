@@ -8,8 +8,10 @@ export const postById = (postId) => {
       }
     }
     `,
-    variables: {
-      postId,
+    variables() {
+      return {
+      postId
+      }
     }
   } 
 } 
