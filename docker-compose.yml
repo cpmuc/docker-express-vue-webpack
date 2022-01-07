@@ -30,7 +30,7 @@ services:
     ports:
       - ${HOST_APP_PORT}:${VUE_APP_PORT}
     volumes:
-      - ./web:/usr/src/web:cached
+      - ./web:/usr/src/web:delegated
     command: "yarn serve"
   postgres:
     image: postgres:12

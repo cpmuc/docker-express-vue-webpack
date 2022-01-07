@@ -7,7 +7,7 @@ RUN ls
 
 RUN yarn
 
-RUN yarn @vue/cli global
+RUN yarn global add @vue/cli @vue/cli-service-global 
 
 # RUN npm rebuild node-sass
 

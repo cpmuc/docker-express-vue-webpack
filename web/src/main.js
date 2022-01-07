@@ -2,6 +2,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import {createApolloProvider} from "@vue/apollo-option";
 import {ApolloClient, InMemoryCache} from "@apollo/client/core";
+import './assets/tailwind.css'
+import router from './router'
 
 const cache = new InMemoryCache()
 
@@ -14,4 +16,4 @@ const apolloProvider = createApolloProvider({
   defaultClient: apolloClient
 })
 
-createApp(App).use(apolloProvider).mount('#app')
+createApp(App).use(router).use(apolloProvider).mount('#app')
